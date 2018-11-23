@@ -8,8 +8,7 @@
 #include<sys/ipc.h>
 #include<sys/shm.h>
 #include<sys/sem.h>
-#include<semaphore.h>
-#include<fcntl.h>
+
 
 struct sembuf operacao[1];
 int idsem;
@@ -115,31 +114,24 @@ for(i = 0 ; i <= 19 ; i++)
 }   
 }else
 {
-  printf("SAI\n");
+  printf("Fim das mensagens\n");
 }
 
 sleep(5);
 
-printf("adeus\n");
+printf("Término do programa\n");
 shmctl (idshm, IPC_RMID, 0);
-shmctl (idsem, IPC_RMID, 0);
-
-/*
-if(wait(&estado) == 0){
-destroi_semaforo(idsem);
-}
-*/
+semctl (idsem, IPC_RMID, 0);
+//destroi_semaforo(idsem);
 
 exit (0);
 }
 
-
 void destroi_semaforo(int id){
-  if (semctl(idsem,0,IPC_RMID,0)!=-1) {
-  printf("O semaforo com semid %d foi destruido\n",idsem);
-             }
-      else {
-        perror("Impossivel de destruir o semaforo");
-             exit(1); 
-             }
+  if (semctl(idsem,IPC_RMID,0)!=-1) {
+    printf("O semaforo com semid %d foi destruido\n",idsem);
+  }else {
+    perror("Impossivel de destruir o semaforo");
+    exit(1);
+}
 }
